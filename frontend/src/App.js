@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import "./App.css";
 
 function App(){
   const [customers, setCustomers] = useState([]);
@@ -97,36 +98,69 @@ const validateForm =() => {
 };
 
 return(
-  <div style={{padding: "20px"}}>
-    <h2>Customer Management</h2>
+  <div className="container">
+    <div className="header">
+  <img src="./CMS.jpeg" alt="logo" className="logo" />
+  <h2>Customer Management System</h2>
+</div>
   
 
   {/* Form to add a new customer */}
+  <div className="form-card">
+    <div className="form-row">
+      <div>
+        <label>Name </label>
     <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />
+    </div>
+
+    <div>
+      <label>Date of Birth </label>
     <input type="date" name="dateOfBirth" value={form.dateOfBirth} onChange={handleChange} />
+    </div>
+
+    <div>
+      <label>NIC </label>
     <input name="nic" placeholder="NIC" value={form.nic} onChange={handleChange} />
-
-    <h4>Mobile Numbers</h4>
+    </div>
+  </div>
+ <div className="form-row">
+  <div>
+    <label>Mobile Numbers </label>
     {form.mobileNumbers.map((num, index) => (
-      <input key={index} placeholder="Mobile Number" value={num} onChange={(e) => handleMoblieChange(index, e.target.value)} />
-    ))}
+        <div key={index} className="mobile-row">
+          <input
+            placeholder="Enter mobile number"
+            value={num}
+            onChange={(e) => handleMoblieChange(index, e.target.value)}
+          />
+        </div>
+      ))}
+    </div>
 
-    <button onClick={addMobileFeild}>Add Mobile Number</button>
+    <div>
+       <button className="btn-secondary" onClick={addMobileFeild}>
+        + Add Mobile Number
+      </button>
+          </div>
+          </div>
+
     <br /><br />
-
-
-    <button onClick={editingId ? updateCustomer : addCustomer}>
+    
+    <button className="btn-primary" onClick={editingId ? updateCustomer : addCustomer}>
       {editingId ? "Update Customer" : "Add Customer"}
     </button>
-    <hr />
+    </div>
+
+    <div className="excel-card">
 
     <h3>Upload Excel</h3>
     <input type="file" onChange={handleFileChange} />
-    <button onClick={uploadExcel}>Upload</button>
+    <button className="btn-success" onClick={uploadExcel}>Upload</button>
+    </div>
     
     <hr />
     {/*Table*/}
-    <table border = "1">
+    <table className="custom-table">
       <thead>
       <tr>
         <th>ID</th>
@@ -145,7 +179,7 @@ return(
             <td>{c.nic}</td>
             <td>{c.mobileNumbers.join(", ")}</td>
             <td>
-              <button onClick={() =>{
+              <button className="btn-edit" onClick={() =>{
                 setEditingId(c.id);
                 setForm({name: c.name,
                   dateOfBirth: c.dateOfBirth,
@@ -154,7 +188,7 @@ return(
                 });
               }}>Edit</button>
             
-              <button onClick={() => deleteCustomer(c.id)}>Delete</button>
+              <button className="btn-delete" onClick={() => deleteCustomer(c.id)}>Delete</button>
             </td>
           </tr>
         ))}
@@ -166,6 +200,6 @@ return(
   
 );
 
-
 }
+
 export default App;
