@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Data
@@ -26,18 +27,21 @@ public class Customer {
     private String nic;
 
     @ElementCollection
-    private List<String> mobileNumbers;
+    @CollectionTable(name = "customer_mobile_numbers",
+     joinColumns = @JoinColumn(name = "customer_id"))
+     @Column(name = "mobile_number")
+    private List<String> mobileNumbers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "customer_family",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "family_member_id")
     )
-    private List<Customer> familyMembers;
+    private List<Customer> familyMembers = new ArrayList<>();
 
 
 }

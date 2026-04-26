@@ -7,9 +7,11 @@ function App(){
     name: "",
     dateOfBirth: "",
     nic: "",
+    mobileNumbers:[""]
   });
   const[editingId, setEditingId] = useState(null);
   const [file, setFile] = useState(null);
+  
 
 const EXCEL_API = "http://localhost:8080/api/excel/upload"; 
 
@@ -28,13 +30,14 @@ const handleChange = (e) => {
 };
 
 const addCustomer = () => {
+  if(!validateForm()) return;
   axios.post(API,form, {
     headers:{
       "Content-Type": "application/json"
     }
   }).then(() =>{
     fetchCustomers();
-    setForm({name: "", dateOfBirth: "", nic: ""});
+    setForm({name: "", dateOfBirth: "", nic: "", mobileNumbers: [""] });
   });
 };
 
@@ -48,6 +51,8 @@ const deleteCustomer = (id) =>{
 };
 
 const updateCustomer = () => {
+  if(!validateForm()) return;
+
   axios.put(`${API}/${editingId}`,form,{
     headers:{
       "Content-Type": "application/json"
@@ -55,7 +60,7 @@ const updateCustomer = () => {
   }).then(() =>{
     fetchCustomers();
     setEditingId(null);
-    setForm({name: "", dateOfBirth: "", nic: "" });
+    setForm({name: "", dateOfBirth: "", nic: "", mobileNumbers: [""] });
   });
 };
 
@@ -75,6 +80,22 @@ const uploadExcel = () => {
   });
 };
 
+const handleMoblieChange = (index, value) => {
+  const updated = [...form.mobileNumbers];
+  updated[index] = value;
+  setForm({...form, mobileNumbers: updated});
+};
+const addMobileFeild = ()=>{
+  setForm({...form, mobileNumbers: [...form.mobileNumbers, ""]});
+};
+const validateForm =() => {
+  if(!form.name || !form.dateOfBirth || !form.nic){
+    alert("Please fill all mandatory fields (Name, Date of Birth, NIC)");
+    return false;
+  }
+  return true;
+};
+
 return(
   <div style={{padding: "20px"}}>
     <h2>Customer Management</h2>
@@ -84,6 +105,15 @@ return(
     <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />
     <input type="date" name="dateOfBirth" value={form.dateOfBirth} onChange={handleChange} />
     <input name="nic" placeholder="NIC" value={form.nic} onChange={handleChange} />
+
+    <h4>Mobile Numbers</h4>
+    {form.mobileNumbers.map((num, index) => (
+      <input key={index} placeholder="Mobile Number" value={num} onChange={(e) => handleMoblieChange(index, e.target.value)} />
+    ))}
+
+    <button onClick={addMobileFeild}>Add Mobile Number</button>
+    <br /><br />
+
 
     <button onClick={editingId ? updateCustomer : addCustomer}>
       {editingId ? "Update Customer" : "Add Customer"}
@@ -103,6 +133,7 @@ return(
         <th>Name</th>
         <th>Date of Birth</th>
         <th>NIC</th>
+        <th>Mobile Numbers</th>
         <th>Actions</th>
       </tr></thead>
       <tbody>
@@ -112,12 +143,14 @@ return(
             <td>{c.name}</td>
             <td>{c.dateOfBirth}</td>
             <td>{c.nic}</td>
+            <td>{c.mobileNumbers.join(", ")}</td>
             <td>
               <button onClick={() =>{
                 setEditingId(c.id);
                 setForm({name: c.name,
                   dateOfBirth: c.dateOfBirth,
-                  nic: c.nic
+                  nic: c.nic,
+                  mobileNumbers: c.mobileNumbers || [""]
                 });
               }}>Edit</button>
             

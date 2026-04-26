@@ -43,4 +43,9 @@ CREATE TABLE customer_family_members(
 
 -- Insert sample data
 INSERT INTO country (name) VALUES ('USA'), ('Canada'), ('UK');  
-INSERT INTO city (name, country_id) VALUES ('New York', 1), ('Los Angeles', 1), ('Toronto', 2), ('Vancouver', 2), ('London', 3), ('Manchester', 3);
+INSERT INTO city (name, country_id) VALUES ('New York', 1), 
+('Los Angeles', 1), 
+('Toronto', 2), 
+('Vancouver', 2), 
+('London', 3), 
+('Manchester', 3);
