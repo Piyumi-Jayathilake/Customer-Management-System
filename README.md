@@ -138,7 +138,9 @@ This will create:
 Run tests using:
 mvn test
 ---
-
+## UI Preview
+![UI1](CMS1.png)
+![UI2](CMS2.png)
 ## Notes
 - Optional fields like Address and Family Members are supported in backend
 - UI currently focuses on core functionality
