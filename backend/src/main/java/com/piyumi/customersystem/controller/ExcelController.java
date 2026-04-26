@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/excel")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class ExcelController {
     private final ExcelService service;
 

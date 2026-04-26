@@ -23,34 +23,32 @@ public class ExcelService {
         try(InputStream is = file.getInputStream()){
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
-            List<Customer> customers = new ArrayList<>();
+            List<Customer> customersToSave = new ArrayList<>();
 
             for(Row row : sheet){
                 if(row.getRowNum() == 0) continue;
-                Customer c = new Customer();
-
-                c.setName(row.getCell(0).toString());
-                c.setDateOfBirth(row.getCell(1).getLocalDateTimeCellValue().toLocalDate());
+                String name = row.getCell(0).toString();
+                var dob = row.getCell(1).getLocalDateTimeCellValue().toLocalDate();
                 
                 Cell nicCell = row.getCell(2);
+                String nic;
+
                 if(nicCell.getCellType() == CellType.NUMERIC){
-                    c.setNic(String.valueOf((long) nicCell.getNumericCellValue()));
+                    nic = String.valueOf((long) nicCell.getNumericCellValue());
                 } else{
 
-                    c.setNic(nicCell.getStringCellValue());
+                    nic = nicCell.getStringCellValue();
                 }
-
-                customers.add(c);
+                Customer customer = repo.findByNic(nic).orElse(new Customer());
+                customer.setName(name);
+                customer.setDateOfBirth(dob);
+                customer.setNic(nic);
+                customersToSave.add(customer);
+            
 
             }
-            List<Customer> validCustomers = new ArrayList<>();
-            for(Customer c : customers){
-                if(repo.findByNic(c.getNic()).isEmpty()){
-                    validCustomers.add(c);
-                }
-            }
-            for(int i =0; i < validCustomers.size();i +=100){
-                repo.saveAll(validCustomers.subList(i, Math.min(i + 100, validCustomers.size())));
+            for(int i =0; i < customersToSave.size();i +=100){
+                repo.saveAll(customersToSave.subList(i, Math.min(i + 100, customersToSave.size())));
             }
 
         } catch (Exception e){

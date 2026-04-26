@@ -36,6 +36,9 @@ public class CustomerService {
     }
 
     public void delete(Long id){
+        Customer customer = getById(id);
+        customer.setFamilyMembers(null);
+        repo.save(customer);
         repo.deleteById(id);
     }
 
